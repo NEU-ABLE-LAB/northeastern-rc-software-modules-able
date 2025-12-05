@@ -1,43 +1,43 @@
 // ABLE Lab / Northeastern RC helper bookmarklet
-// This script is intended to be loaded via a bookmarklet. It:
-//   - Sets the conda module to "able"
-//   - Sets the VSCode (code-server) module to "code-server/4.105.1"
+// This script is intended to be loaded via a bookmarklet.
+// - Adds/updates module options for ABLE
+// - Selects ABLE defaults for conda and VSCode
 
 (function () {
-  function ensureOption(id, val, text) {
-    var s = document.getElementById(id);
-    if (!s) {
+  function ensureOption(selectId, value, label) {
+    var select = document.getElementById(selectId);
+    if (!select) {
       return null;
     }
 
-    var opt = s.querySelector('option[value="' + val + '"]');
+    var opt = select.querySelector('option[value="' + value + '"]');
 
     if (!opt) {
       opt = document.createElement('option');
-      opt.value = val;
-      opt.textContent = text;
-      s.appendChild(opt);
+      opt.value = value;
+      opt.textContent = label;
+      select.appendChild(opt);
     } else {
-      opt.textContent = text;
+      opt.textContent = label;
     }
 
     return opt;
   }
 
-  function setSelect(id, val, text) {
-    var s = document.getElementById(id);
-    if (!s) {
+  function setSelect(selectId, value, label) {
+    var select = document.getElementById(selectId);
+    if (!select) {
       return;
     }
 
-    var opt = ensureOption(s, val, text);
+    var opt = ensureOption(selectId, value, label);
     if (!opt) {
       return;
     }
 
     opt.selected = true;
-    s.value = val;
-    s.dispatchEvent(new Event('change', { bubbles: true }));
+    select.value = value;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   // Add options to desired modules
