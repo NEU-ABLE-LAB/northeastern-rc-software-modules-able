@@ -6,6 +6,10 @@
 #SBATCH --error=./logs/install_%j.err
 #SBATCH --time=01:00:00
 
+set -euo pipefail
+
+echo "[INFO] Starting install of code-server 4.106.3 on $(hostname) at $(date)"
+
 # Setting up variables for the installation
 # Only SOFTWARE_DIRECTORY will need to be changed on future updates
 # If a user wants to clone and install a local copy for themselves/groups
@@ -28,18 +32,39 @@ MODULEFILE_DIRECTORY="$MODULEFILE_PREFIX/$SOFTWARE_NAME"
 
 GITHUB_URL="https://github.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/$SOFTWARE_NAME/install-v$SOFTWARE_VERSION.sh"
 
+echo "[INFO] Using install directories:"
+echo "       SOFTWARE_DIRECTORY         = $SOFTWARE_DIRECTORY"
+echo "       SOFTWARE_DOWNLOADS_DIR     = $SOFTWARE_DOWNLOADS_DIRECTORY"
+echo "       SOFTWARE_PACKAGE_DIRECTORY = $SOFTWARE_PACKAGE_DIRECTORY"
+echo "       MODULEFILE_DIRECTORY       = $MODULEFILE_DIRECTORY"
+
 # Download and unzip
-mkdir -p $SOFTWARE_DOWNLOADS_DIRECTORY
-cd $SOFTWARE_DOWNLOADS_DIRECTORY
-wget "https://github.com/coder/code-server/releases/download/v${SOFTWARE_VERSION}/code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}.tar.gz"
-tar -xvzf "code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}.tar.gz"
+echo "[STEP] Creating download directory and fetching tarball"
+mkdir -p "$SOFTWARE_DOWNLOADS_DIRECTORY"
+cd "$SOFTWARE_DOWNLOADS_DIRECTORY"
+
+TARBALL="code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}.tar.gz"
+if [[ -f "$TARBALL" ]]; then
+	echo "[INFO] Found existing tarball $TARBALL – reusing"
+else
+	echo "[INFO] Downloading code-server v${SOFTWARE_VERSION} (${SOFTWARE_ARCH})"
+	wget "https://github.com/coder/code-server/releases/download/v${SOFTWARE_VERSION}/${TARBALL}"
+fi
+
+echo "[STEP] Extracting tarball"
+tar -xvzf "$TARBALL" 1>&2
+
+echo "[STEP] Moving unpacked directory into final location"
+mkdir -p "$SOFTWARE_DIRECTORY"
 mv "code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}" "$SOFTWARE_PACKAGE_DIRECTORY"
 
 # Set permissions
+echo "[STEP] Setting ownership and permissions"
 chown -R "${GROUP_ADMIN}":"${GROUP_NAME}" "$SOFTWARE_PACKAGE_DIRECTORY"
 chmod -R go-w "$SOFTWARE_PACKAGE_DIRECTORY"
 
 # Creating modulefile
+echo "[STEP] Creating modulefile in $SOFTWARE_MODULEFILES_DIRECTORY"
 mkdir -p "$SOFTWARE_MODULEFILES_DIRECTORY"
 cd "$SOFTWARE_MODULEFILES_DIRECTORY"
 MODULEFILE=$SOFTWARE_VERSION
@@ -72,5 +97,8 @@ setenv EXTENSIONS_GALLERY "{\"serviceUrl\": \"https://marketplace.visualstudio.c
 EOF
 
 # Moving modulefile
-mkdir -p $MODULEFILE_DIRECTORY
-cp $MODULEFILE $MODULEFILE_DIRECTORY/$SOFTWARE_VERSION
+echo "[STEP] Installing modulefile into $MODULEFILE_DIRECTORY"
+mkdir -p "$MODULEFILE_DIRECTORY"
+cp "$MODULEFILE" "$MODULEFILE_DIRECTORY/$SOFTWARE_VERSION"
+
+echo "[SUCCESS] code-server ${SOFTWARE_VERSION} install completed at $(date)"
