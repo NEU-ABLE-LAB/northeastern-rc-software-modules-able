@@ -24,5 +24,5 @@ get the latest version.
 Use **this** as the bookmark “URL”:
 
 ```javascript
-javascript:(function(){var url='https://raw.githubusercontent.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/main/code-server/bookmarklet.js?ts='+Date.now();fetch(url).then(function(r){return r.text();}).then(function(code){(new Function(code))();}).catch(function(err){console.error('Error loading bookmarklet.js',err);alert('Error loading NEU RC bookmarklet.js. See console for details.');});})();
+javascript:(function(){var url='https://raw.githubusercontent.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/refs/heads/main/code-server/bookmarklet.js?ts='+Date.now();fetch(url).then(function(r){return r.text();}).then(function(code){(new Function(code))();}).catch(function(err){console.error('Error loading bookmarklet.js',err);alert('Error loading NEU RC bookmarklet.js. See console for details.');});})();
 ```

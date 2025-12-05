@@ -45,7 +45,7 @@ cd "$SOFTWARE_MODULEFILES_DIRECTORY"
 MODULEFILE=$SOFTWARE_VERSION
 cat > "$MODULEFILE" <<EOF
 #%Module
-module-whatis "Loads $SOFTWARE_NAME/$SOFTWARE_VERSION module."
+module-whatis "Loads $SOFTWARE_NAME/$SOFTWARE_VERSION module.
 
 This module was built on $(date)
 
