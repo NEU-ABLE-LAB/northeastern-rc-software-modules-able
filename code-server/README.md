@@ -24,5 +24,17 @@ get the latest version.
 Use **this** as the bookmark “URL”:
 
 ```javascript
-javascript:(function(){var s=document.createElement('script');s.src='https://raw.githubusercontent.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/main/code-server/bookmarklet.js?ts='+Date.now();document.head.appendChild(s);})();
+javascript:(function(){
+  var url='https://raw.githubusercontent.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/main/code-server/bookmarklet.js?ts='+Date.now();
+  fetch(url)
+    .then(function(r){return r.text();})
+    .then(function(code){
+      // Run the downloaded code in its own function scope
+      (new Function(code))();
+    })
+    .catch(function(err){
+      console.error('Error loading bookmarklet.js', err);
+      alert('Error loading NEU RC bookmarklet.js. See console for details.');
+    });
+})();
 ```

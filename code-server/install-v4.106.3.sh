@@ -26,7 +26,7 @@ SOFTWARE_MODULEFILES_DIRECTORY="$SOFTWARE_DIRECTORY/modulefiles"
 MODULEFILE_PREFIX="$GROUP_DIRECTORY/modulefiles"
 MODULEFILE_DIRECTORY="$MODULEFILE_PREFIX/$SOFTWARE_NAME"
 
-GITHUB_URL="https://github.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/$SOFTWARE_NAME/v$SOFTWARE_VERSION/install.sh"
+GITHUB_URL="https://github.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/$SOFTWARE_NAME/install-v$SOFTWARE_VERSION.sh"
 
 # Download and unzip
 mkdir -p $SOFTWARE_DOWNLOADS_DIRECTORY
@@ -43,28 +43,32 @@ chmod -R go-w "$SOFTWARE_PACKAGE_DIRECTORY"
 mkdir -p "$SOFTWARE_MODULEFILES_DIRECTORY"
 cd "$SOFTWARE_MODULEFILES_DIRECTORY"
 MODULEFILE=$SOFTWARE_VERSION
-touch $MODULEFILE
-echo "#%Module" >> $MODULEFILE
-echo "module-whatis	 \"Loads $SOFTWARE_NAME/$SOFTWARE_VERSION module." >> $MODULEFILE
-echo "" >> $MODULEFILE
-echo "This module was build on $(date)" >> $MODULEFILE
-echo "" >> $MODULEFILE
-echo "Code Server (https://github.com/coder/code-server) provides VSCode in a browser environment" >> $MODULEFILE
-echo "" >> $MODULEFILE
-echo "The script used to build this module can be found here: $GITHUB_URL" >> $MODULEFILE
-echo "" >> $MODULEFILE
-echo "To load the module, type:" >> $MODULEFILE
-echo "module use $MODULEFILE_PREFIX" >> $MODULEFILE
-echo "module load $SOFTWARE_NAME/$SOFTWARE_VERSION" >> $MODULEFILE
-echo "\"" >> $MODULEFILE
-echo "" >> $MODULEFILE
-echo "conflict	 $SOFTWARE_NAME" >> $MODULEFILE
-echo "" >> $MODULEFILE
-echo "prepend-path	 PATH $SOFTWARE_PACKAGE_DIRECTORY/bin" >> $MODULEFILE
-echo "prepend-path	 LD_LIBRARY_PATH $SOFTWARE_PACKAGE_DIRECTORY/lib" >> $MODULEFILE
-echo "prepend-path	 LIBRARY_PATH $SOFTWARE_PACKAGE_DIRECTORY/lib" >> $MODULEFILE
-echo "" >> $MODULEFILE
-echo "set-alias code \"code-server -r \"" >> $MODULEFILE
+cat > "$MODULEFILE" <<EOF
+#%Module
+module-whatis "Loads $SOFTWARE_NAME/$SOFTWARE_VERSION module."
+
+This module was built on $(date)
+
+Code Server (https://github.com/coder/code-server) provides VSCode in a browser environment
+
+The script used to build this module can be found here: $GITHUB_URL
+
+To load the module, type:
+module use $MODULEFILE_PREFIX
+module load $SOFTWARE_NAME/$SOFTWARE_VERSION
+
+conflict  $SOFTWARE_NAME
+
+prepend-path  PATH            $SOFTWARE_PACKAGE_DIRECTORY/bin
+prepend-path  LD_LIBRARY_PATH $SOFTWARE_PACKAGE_DIRECTORY/lib
+prepend-path  LIBRARY_PATH    $SOFTWARE_PACKAGE_DIRECTORY/lib
+
+# Set an alias for opening files in the vscode window from the terminal
+set-alias code "code-server -r "
+
+# Configure VS Code extensions marketplace
+setenv EXTENSIONS_GALLERY "{\"serviceUrl\": \"https://marketplace.visualstudio.com/_apis/public/gallery\"}"
+EOF
 
 # Moving modulefile
 mkdir -p $MODULEFILE_DIRECTORY
