@@ -56,6 +56,7 @@ The script used to build this module can be found here: $GITHUB_URL
 To load the module, type:
 module use $MODULEFILE_PREFIX
 module load $SOFTWARE_NAME/$SOFTWARE_VERSION
+"
 
 conflict  $SOFTWARE_NAME
 
