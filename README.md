@@ -27,5 +27,5 @@ module use /projects/able/modulefiles
 Run the install scripts as a SLURM batch job. For example, to install `code-server/v4.106.3`
 
 ```bash
-sbatch /projects/able/scripts/northeastern-rc-software-modules-able/code-server/v4.106.3.sh
+sbatch /projects/able/scripts/northeastern-rc-software-modules-able/code-server/install-v4.106.3.sh
 ```
