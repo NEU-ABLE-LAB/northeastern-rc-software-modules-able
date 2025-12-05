@@ -29,8 +29,8 @@ MODULEFILE_DIRECTORY="$MODULEFILE_PREFIX/$SOFTWARE_NAME"
 GITHUB_URL="https://github.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/$SOFTWARE_NAME/v$SOFTWARE_VERSION/install.sh"
 
 # Download and unzip
-mkdir -p $SOFTWARE_DIRECTORY/downloads
-cd $SOFTWARE_DIRECTORY/downloads
+mkdir -p $SOFTWARE_DOWNLOADS_DIRECTORY
+cd $SOFTWARE_DOWNLOADS_DIRECTORY
 wget "https://github.com/coder/code-server/releases/download/v${SOFTWARE_VERSION}/code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}.tar.gz"
 tar -xvzf "code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}.tar.gz"
 mv "code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}" "$SOFTWARE_PACKAGE_DIRECTORY"
@@ -60,9 +60,9 @@ echo "\"" >> $MODULEFILE
 echo "" >> $MODULEFILE
 echo "conflict	 $SOFTWARE_NAME" >> $MODULEFILE
 echo "" >> $MODULEFILE
-echo "prepend-path	 PATH $SOFTWARE_DIRECTORY/$SOFTWARE_NAME/bin" >> $MODULEFILE
-echo "prepend-path	 LD_LIBRARY_PATH $SOFTWARE_DIRECTORY/$SOFTWARE_NAME/lib" >> $MODULEFILE
-echo "prepend-path	 LIBRARY_PATH $SOFTWARE_DIRECTORY/$SOFTWARE_NAME/lib" >> $MODULEFILE
+echo "prepend-path	 PATH $SOFTWARE_PACKAGE_DIRECTORY/bin" >> $MODULEFILE
+echo "prepend-path	 LD_LIBRARY_PATH $SOFTWARE_PACKAGE_DIRECTORY/lib" >> $MODULEFILE
+echo "prepend-path	 LIBRARY_PATH $SOFTWARE_PACKAGE_DIRECTORY/lib" >> $MODULEFILE
 echo "" >> $MODULEFILE
 echo "set-alias code \"code-server -r \"" >> $MODULEFILE
 
