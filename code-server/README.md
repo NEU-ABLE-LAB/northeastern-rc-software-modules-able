@@ -26,3 +26,13 @@ Use **this** as the bookmark “URL”:
 ```javascript
 javascript:(function(){var url='https://raw.githubusercontent.com/NEU-ABLE-LAB/northeastern-rc-software-modules-able/refs/heads/main/code-server/bookmarklet.js?ts='+Date.now();fetch(url).then(function(r){return r.text();}).then(function(code){(new Function(code))();}).catch(function(err){console.error('Error loading bookmarklet.js',err);alert('Error loading NEU RC bookmarklet.js. See console for details.');});})();
 ```
+
+## Contributing
+
+Follow the steps below to add a module for a new version of [code-server](https://github.com/coder/code-server/releases)
+
+1. Create a copy of the `install-v*.sh` script with a filename that matches the desired version
+2. Update the `SOFTWARE_VERSION` variable to the desired version. (CTRL+F the old version to check other places to udpate.)
+3. Run the install script (`chmod u+x` if you receive a permission denied error.)
+4. Modify `bookmarklet.js` with the latest version `setSelect` statement
+5. Merge changes into the `main` branch to make the `bookmarklet.js` available from the interent for the bookmarklet snippet to pull from.

@@ -77,4 +77,10 @@
     'code-server/4.108.2',
     'vscode/1.108.2 (able)'
   );
+
+  setSelect(
+    'batch_connect_session_context_vscode_module',
+    'code-server/4.111.0',
+    'vscode/1.111.0 (able)'
+  );
 })();
