@@ -33,4 +33,6 @@ Follow the steps below to add a module for a new version of [code-server](https:
 
 1. Create a copy of the `install-v*.sh` script with a filename that matches the desired version
 2. Update the `SOFTWARE_VERSION` variable to the desired version. (CTRL+F the old version to check other places to udpate.)
-3. 
+3. Run the install script (`chmod u+x` if you receive a permission denied error.)
+4. Modify `bookmarklet.js` with the latest version `setSelect` statement
+5. Merge changes into the `main` branch to make the `bookmarklet.js` available from the interent for the bookmarklet snippet to pull from.
