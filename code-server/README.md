@@ -1,6 +1,6 @@
 # Code Server
 
-This software module load the specified version of VSCode for running within the
+These scripts create software modules that load the specified version of VSCode for running within the
 [OnDemand](https://ood.explorer.northeastern.edu/)
 web graphical interface.
 
@@ -29,10 +29,33 @@ javascript:(function(){var url='https://raw.githubusercontent.com/NEU-ABLE-LAB/n
 
 ## Contributing
 
-Follow the steps below to add a module for a new version of [code-server](https://github.com/coder/code-server/releases)
+Follow the steps below to add a module for a [new version of code-server](https://github.com/coder/code-server/releases)
 
-1. Create a copy of the `install-v*.sh` script with a filename that matches the desired version
-2. Update the `SOFTWARE_VERSION` variable to the desired version. (CTRL+F the old version to check other places to udpate.)
-3. Run the install script (`chmod u+x` if you receive a permission denied error.)
-4. Modify `bookmarklet.js` with the latest version `setSelect` statement
-5. Merge changes into the `main` branch to make the `bookmarklet.js` available from the interent for the bookmarklet snippet to pull from.
+1. Create a copy of the `install-v*.sh` script with a filename that matches the desired version.
+2. Update the `SOFTWARE_VERSION` variable to the desired version. (Use `CTRL+F` for the old version to catch other references.)
+3. Run the install script with `sbatch`.
+4. Modify `bookmarklet.js`, adding an `ensureOption` statement and modifying the `setSelect` with the desired version.
+5. Merge changes into the `main` branch to make `bookmarklet.js` available from the internet for the bookmarklet snippet to pull from.
+
+### Removing a version
+
+You should remove old unused versions with the following process:
+
+1. Ensure no running jobs or active OnDemand sessions are using the target version.
+2. Remove the published modulefile so new sessions cannot load it.
+3. Remove the staged modulefile and software tree for that version.
+4. Remove the downloaded tarball for that version.
+5. Remove the install script in this repo for that version.
+6. Remove that version's `ensureOption` statement (and modify the `setSelect` if necessary) from `code-server/bookmarklet.js`.
+
+Example commands for version `4.111.0`:
+
+```bash
+VERSION=4.111.0
+ARCH=linux-amd64
+rm -f /projects/able/modulefiles/code-server/$VERSION
+rm -f /projects/able/software/code-server/$VERSION/modulefiles/$VERSION
+rm -rf /projects/able/software/code-server/$VERSION/code-server-$VERSION-$ARCH
+rm -f /projects/able/software/code-server/$VERSION/downloads/code-server-$VERSION-$ARCH.tar.gz
+rmdir /projects/able/software/code-server/$VERSION 2>/dev/null || true
+```

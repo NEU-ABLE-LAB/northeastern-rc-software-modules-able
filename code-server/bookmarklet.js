@@ -40,13 +40,26 @@
     select.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  // Add options to desired modules
+  // Add options to desired conda versions
   ensureOption(
     'batch_connect_session_context_conda_module',
     'miniforge3/25.9.1-0',
     'miniforge3/25.9.1-0 (able)'
   );
 
+  ensureOption(
+    'batch_connect_session_context_conda_module',
+    'miniforge3/25.11.0-1',
+    'miniforge3/25.11.0-1 (able)'
+  );
+
+  ensureOption(
+    'batch_connect_session_context_conda_module',
+    'miniforge3/26.1.0-0',
+    'miniforge3/26.1.0-0 (able)'
+  );
+
+  // Add options to desired VSCode versions
   ensureOption(
     'batch_connect_session_context_vscode_module',
     'code-server/4.105.1',
@@ -65,17 +78,17 @@
     'vscode/1.108.2 (able)'
   );
 
+  ensureOption(
+    'batch_connect_session_context_vscode_module',
+    'code-server/4.111.0',
+    'vscode/1.111.0 (able)'
+  );
+
   // Set the desired modules on the RC form
   setSelect(
     'batch_connect_session_context_conda_module',
-    'miniforge3/25.9.1-0',
-    'miniforge3/25.9.1-0 (able)'
-  );
-
-  setSelect(
-    'batch_connect_session_context_vscode_module',
-    'code-server/4.108.2',
-    'vscode/1.108.2 (able)'
+    'miniforge3/26.1.0-0',
+    'miniforge3/26.1.0-0 (able)'
   );
 
   setSelect(
