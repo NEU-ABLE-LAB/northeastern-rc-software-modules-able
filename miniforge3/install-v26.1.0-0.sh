@@ -8,14 +8,14 @@
 
 set -euo pipefail
 
-echo "[INFO] Starting install of miniforge3 25.11.0-1 on $(hostname) at $(date)"
+echo "[INFO] Starting install of miniforge3 26.1.0-0 on $(hostname) at $(date)"
 
 # Setting up variables for the installation
 # Only SOFTWARE_DIRECTORY will need to be changed on future updates
 # If a user wants to clone and install a local copy for themselves/groups
 # GROUP_DIRECTORY needs to be modified
 SOFTWARE_NAME="miniforge3"
-SOFTWARE_VERSION="25.11.0-1"
+SOFTWARE_VERSION="26.1.0-0"
 SOFTWARE_ARCH="Linux-x86_64"
 
 GROUP_DIRECTORY="/projects/able"
