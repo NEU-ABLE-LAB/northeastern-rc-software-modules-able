@@ -84,6 +84,12 @@
     'vscode/1.111.0 (able)'
   );
 
+  ensureOption(
+    'batch_connect_session_context_vscode_module',
+    'code-server/4.126.0',
+    'vscode/1.126.0 (able)'
+  );
+
   // Set the desired modules on the RC form
   setSelect(
     'batch_connect_session_context_conda_module',
@@ -93,7 +99,7 @@
 
   setSelect(
     'batch_connect_session_context_vscode_module',
-    'code-server/4.111.0',
-    'vscode/1.111.0 (able)'
+    'code-server/4.126.0',
+    'vscode/1.126.0 (able)'
   );
 })();
