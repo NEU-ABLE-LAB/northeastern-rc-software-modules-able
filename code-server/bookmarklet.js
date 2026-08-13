@@ -109,11 +109,6 @@
   );
 
   setSelect(
-    'batch_connect_session_context_vscode_module',
-    'code-server/4.126.0',
-    'vscode/1.126.0 (able)'
-  );
-  setSelect(
   'batch_connect_session_context_vscode_module',
   'code-server/4.126.0',
   'vscode/1.126.0 (able)'
@@ -122,5 +117,4 @@
 // Set default compute resources
 setInput('batch_connect_session_context_ncpus', 8);
 setInput('batch_connect_session_context_memory', 16);
-})();
 })();
