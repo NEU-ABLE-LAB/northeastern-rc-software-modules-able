@@ -58,10 +58,27 @@ echo "[STEP] Moving unpacked directory into final location"
 mkdir -p "$SOFTWARE_DIRECTORY"
 mv "code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}" "$SOFTWARE_PACKAGE_DIRECTORY"
 
-# Set permissions
-echo "[STEP] Setting ownership and permissions"
-chown -R "${GROUP_ADMIN}":"${GROUP_NAME}" "$SOFTWARE_PACKAGE_DIRECTORY"
-chmod -R go-w "$SOFTWARE_PACKAGE_DIRECTORY"
+# Set shared group and ACL permissions
+echo "[STEP] Setting group and ACL permissions"
+
+# Change the group where permitted.
+# This does not require root if the current user owns the files
+# and is a member of $GROUP_NAME.
+chgrp -R "${GROUP_NAME}" "$SOFTWARE_PACKAGE_DIRECTORY"
+
+# Keep new files/directories in the shared group.
+find "$SOFTWARE_PACKAGE_DIRECTORY" -type d -exec chmod g+s {} +
+
+# Give the group admin full access and the group read/execute access.
+# X preserves execute permission only where it is already needed.
+DIR_ACL="u::rwx,u:${GROUP_ADMIN}:rwx,g::r-X,g:${GROUP_NAME}:r-X,m::rwx,o::---"
+FILE_ACL="u::rwX,u:${GROUP_ADMIN}:rwX,g::r-X,g:${GROUP_NAME}:r-X,m::rwx,o::---"
+
+find "$SOFTWARE_PACKAGE_DIRECTORY" -type d \
+  -exec setfacl -m "$DIR_ACL" {} +
+
+find "$SOFTWARE_PACKAGE_DIRECTORY" -type f \
+  -exec setfacl -m "$FILE_ACL" {} +
 
 # Creating modulefile
 echo "[STEP] Creating modulefile in $SOFTWARE_MODULEFILES_DIRECTORY"
