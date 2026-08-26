@@ -115,7 +115,7 @@
 );
 
 // Set default compute resources
-setInput('batch_connect_session_context[time]', 8);
+setInput('batch_connect_session_context_time', 8);
 setInput('batch_connect_session_context_ncpus', 8);
 setInput('batch_connect_session_context_memory', 16);
 })();
