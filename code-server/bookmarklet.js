@@ -40,6 +40,17 @@
     select.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
+  function setInput(inputId, value) {
+    var input = document.getElementById(inputId);    
+    if (!input) {
+        return;
+    }
+
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
   // Add options to desired conda versions
   ensureOption(
     'batch_connect_session_context_conda_module',
@@ -90,6 +101,18 @@
     'vscode/1.126.0 (able)'
   );
 
+  ensureOption(
+    'batch_connect_session_context_vscode_module',
+    'code-server/4.134.0',
+    'vscode/1.134.0 (able)'
+  );
+
+  ensureOption(
+    'batch_connect_session_context_vscode_module',
+    'code-server/4.135.0',
+    'vscode/1.135.0 (able)'
+  );
+  
   // Set the desired modules on the RC form
   setSelect(
     'batch_connect_session_context_conda_module',
@@ -99,7 +122,12 @@
 
   setSelect(
     'batch_connect_session_context_vscode_module',
-    'code-server/4.126.0',
-    'vscode/1.126.0 (able)'
+    'code-server/4.135.0',
+    'vscode/1.135.0 (able)'
   );
+
+// Set default compute resources
+setInput('batch_connect_session_context_time', 8);
+setInput('batch_connect_session_context_ncpus', 8);
+setInput('batch_connect_session_context_memory', 16);
 })();

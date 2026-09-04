@@ -1,0 +1,7 @@
+able-dev=0.1.1-beta
+code-server=4.135.0
+gh=2.100.0
+gh-extension=yahsan2/gh-sub-issue
+opencode=1.18.28
+codex=0.153.3
+claude-code=2.1.260
