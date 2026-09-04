@@ -1,17 +1,18 @@
-# able-dev module stack
+# able-dev
 
-**Release:** `0.1-beta` — initial beta release.
+**Release:** `0.1.1-beta`
 
 `able-dev/0.1-beta` provides a shared development environment for the ABLE HPC system.
+## Included
 
-It includes:
-
-- `code-server/4.134.0`
-- `gh/2.98.0`
-  - GitHub CLI extension: `yahsan2/gh-sub-issue`
-- `opencode/1.18.23`
-- `codex/0.150.0`
-- `claude-code/2.1.246`
+| Tool | Version |
+| --- | --- |
+| code-server | `4.135.0` |
+| GitHub CLI | `2.100.0` |
+| yahsan2/gh-sub-issue | per-user `gh` extension |
+| OpenCode | `1.18.28` |
+| OpenAI Codex CLI | `0.153.3` |
+| Claude Code | `2.1.260` |
 
 ## Install
 
@@ -21,25 +22,23 @@ From the repository root:
 
 ```bash
 mkdir -p logs
-sbatch able-dev/install-v0.1-beta.sh
+sbatch able-dev/install-v0.1.1-beta.sh
 ```
 
-You do **not** need to submit each component installer separately.
-
-The top-level installer consumes the existing versioned install scripts in sequence:
+The top-level installer consumes:
 
 ```text
-able-dev/install-v0.1-beta.sh
-│
-├── code-server/install-v4.134.0.sh
-├── gh/install-v2.98.0.sh
-├── opencode/install-v1.18.23.sh
-├── codex/install-v0.150.0.sh
-└── claude-code/install-v2.1.246.sh
-        │
-        ▼
-creates /projects/able/modulefiles/able-dev/0.1-beta
+able-dev/install-v0.1.1-beta.sh
+|
+├── code-server/install-v4.135.0.sh
+├── gh/install-v2.100.0.sh
+├── opencode/install-v1.18.28.sh
+├── codex/install-v0.153.3.sh
+└── claude-code/install-v2.1.260.sh
 ```
+
+`SLURM_SUBMIT_DIR` is used for repository discovery because Slurm executes the
+submitted batch script from a spool location such as `/var/spool/slurmd`.
 
 Internally, the equivalent operations are:
 
@@ -50,53 +49,18 @@ bash opencode/install-v1.18.23.sh
 bash codex/install-v0.150.0.sh
 bash claude-code/install-v2.1.246.sh
 ```
-
-The component scripts remain separate so an individual tool can still be installed or upgraded independently when needed.
-
-Because the component scripts are invoked with `bash`, their embedded `#SBATCH` directives are ignored during a full `able-dev` installation. The Slurm resources for the full installation come from `able-dev/install-v0.1-beta.sh`.
-
-The installer uses `set -euo pipefail`, so a failure in any component stops the installation before the `able-dev` meta-module is created.
-
 ## Use
 
 After the installation job completes successfully:
 
 ```bash
 module use /projects/able/modulefiles
-module load able-dev/0.1-beta
+module load able-dev/0.1.1-beta
 ```
 
-This loads:
-
-```text
-code-server/4.134.0
-gh/2.98.0
-opencode/1.18.23
-codex/0.150.0
-claude-code/2.1.246
-```
-
-## GitHub CLI extension
-
-The `gh` environment includes:
-
-```text
-yahsan2/gh-sub-issue
-```
-
-GitHub CLI extensions are user-scoped. On first use, the `gh` wrapper checks whether `sub-issue` is available for the current user and installs it when required:
+Verify:
 
 ```bash
-gh extension install yahsan2/gh-sub-issue
-```
-
-This keeps GitHub authentication and extension state associated with each user while the main `gh` executable remains shared.
-
-## Check
-
-```bash
-module list
-
 code-server --version
 gh --version
 gh extension list
@@ -104,50 +68,43 @@ gh sub-issue --help
 opencode --version
 codex --version
 claude --version
-
 echo "$ABLE_DEV_VERSION"
 ```
 
-Expected module stack:
+## Codex Code Mode
+
+Codex is installed from the complete:
 
 ```text
-able-dev/0.1-beta
-code-server/4.134.0
-gh/2.98.0
-opencode/1.18.23
-codex/0.150.0
-claude-code/2.1.246
+codex-package-x86_64-unknown-linux-musl.tar.gz
 ```
 
-## Install an individual component
+The package contents are preserved. Installation fails unless `codex` and
+`codex-code-mode-host` both exist and are siblings. The modulefile also sets
+`CODEX_CODE_MODE_HOST_PATH` explicitly.
 
-The versioned installers can still be submitted independently. For example:
+## GitHub CLI extension
+
+`yahsan2/gh-sub-issue` remains per-user. The shared `gh` wrapper checks for it
+on first use and installs it into the user's own GitHub CLI extension location.
+
+To bypass the bootstrap temporarily:
 
 ```bash
-sbatch gh/install-v2.98.0.sh
+export ABLE_GH_SKIP_EXTENSION_BOOTSTRAP=1
 ```
-
-This is useful when updating or repairing one tool without reinstalling the full `able-dev` environment.
 
 ## Authentication
 
-Authentication is per user.
+Shared modulefiles contain binaries and environment configuration only. Do not
+store GitHub, OpenAI, Anthropic, or other API tokens under `/projects/able`.
 
-Do not put GitHub, OpenAI, Anthropic, or other API tokens in shared modulefiles. Each user should authenticate or configure credentials in their own account after loading the module.
+Each user authenticates in their own account/home directory.
 
-## No sudo
-
-The installers do not use `sudo` or require a system package installation.
-
-Software is installed under:
+## Locations
 
 ```text
 /projects/able/software/
-```
-
-Modulefiles are installed under:
-
-```text
 /projects/able/modulefiles/
 ```
 
