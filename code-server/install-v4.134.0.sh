@@ -52,7 +52,16 @@ else
 fi
 
 echo "[STEP] Extracting tarball"
-tar -xvzf "$TARBALL" 1>&2
+
+EXTRACTED_DIRECTORY="$SOFTWARE_DOWNLOADS_DIRECTORY/code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}"
+
+rm -rf "$EXTRACTED_DIRECTORY"
+tar -xzf "$TARBALL"
+
+echo "[STEP] Installing unpacked directory"
+
+rm -rf "$SOFTWARE_PACKAGE_DIRECTORY"
+mv "$EXTRACTED_DIRECTORY" "$SOFTWARE_PACKAGE_DIRECTORY"
 
 echo "[STEP] Moving unpacked directory into final location"
 mkdir -p "$SOFTWARE_DIRECTORY"
