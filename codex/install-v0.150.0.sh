@@ -1,0 +1,48 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH -p short
+#SBATCH --output=./logs/install_codex_%j.out
+#SBATCH --error=./logs/install_codex_%j.err
+#SBATCH --time=00:30:00
+
+set -euo pipefail
+
+SOFTWARE_NAME="codex"
+SOFTWARE_VERSION="0.150.0"
+RELEASE_TAG="rust-v${SOFTWARE_VERSION}"
+SOFTWARE_ARCH="x86_64-unknown-linux-musl"
+GROUP_DIRECTORY="/projects/able"
+SOFTWARE_DIRECTORY="$GROUP_DIRECTORY/software/$SOFTWARE_NAME/$SOFTWARE_VERSION"
+SOFTWARE_PACKAGE_DIRECTORY="$SOFTWARE_DIRECTORY/package"
+SOFTWARE_DOWNLOADS_DIRECTORY="$SOFTWARE_DIRECTORY/downloads"
+EXTRACT_DIRECTORY="$SOFTWARE_DIRECTORY/extract"
+MODULEFILE_PREFIX="$GROUP_DIRECTORY/modulefiles"
+MODULEFILE_DIRECTORY="$MODULEFILE_PREFIX/$SOFTWARE_NAME"
+TARBALL="codex-${SOFTWARE_ARCH}.tar.gz"
+
+mkdir -p "$SOFTWARE_DOWNLOADS_DIRECTORY"
+cd "$SOFTWARE_DOWNLOADS_DIRECTORY"
+
+if [[ ! -f "$TARBALL" ]]; then
+  wget "https://github.com/openai/codex/releases/download/${RELEASE_TAG}/${TARBALL}" -O "$TARBALL"
+fi
+
+rm -rf "$EXTRACT_DIRECTORY" "$SOFTWARE_PACKAGE_DIRECTORY"
+mkdir -p "$EXTRACT_DIRECTORY" "$SOFTWARE_PACKAGE_DIRECTORY"
+tar -xzf "$TARBALL" -C "$EXTRACT_DIRECTORY"
+CODEX_BINARY="$(find "$EXTRACT_DIRECTORY" -type f -name 'codex*' -print -quit)"
+[[ -n "$CODEX_BINARY" ]] || { echo "[ERROR] Codex executable not found" >&2; exit 1; }
+install -m 0755 "$CODEX_BINARY" "$SOFTWARE_PACKAGE_DIRECTORY/codex"
+rm -rf "$EXTRACT_DIRECTORY"
+chmod -R g+rX,o-rwx "$SOFTWARE_DIRECTORY"
+
+mkdir -p "$MODULEFILE_DIRECTORY"
+cat > "$MODULEFILE_DIRECTORY/$SOFTWARE_VERSION" <<EOF_MODULE
+#%Module
+module-whatis "OpenAI Codex CLI $SOFTWARE_VERSION"
+conflict codex
+prepend-path PATH $SOFTWARE_PACKAGE_DIRECTORY
+EOF_MODULE
+
+echo "[SUCCESS] Installed codex/$SOFTWARE_VERSION"
