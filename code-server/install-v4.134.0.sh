@@ -63,10 +63,6 @@ echo "[STEP] Installing unpacked directory"
 rm -rf "$SOFTWARE_PACKAGE_DIRECTORY"
 mv "$EXTRACTED_DIRECTORY" "$SOFTWARE_PACKAGE_DIRECTORY"
 
-echo "[STEP] Moving unpacked directory into final location"
-mkdir -p "$SOFTWARE_DIRECTORY"
-mv "code-server-${SOFTWARE_VERSION}-${SOFTWARE_ARCH}" "$SOFTWARE_PACKAGE_DIRECTORY"
-
 # Set shared group and ACL permissions
 echo "[STEP] Setting group and ACL permissions"
 
